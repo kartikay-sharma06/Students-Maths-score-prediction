@@ -11,8 +11,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project files
 COPY . .
 
-# Expose Flask application port
-EXPOSE 5000
+# Render provides PORT at runtime; 10000 is its default for web services.
+EXPOSE 10000
 
 # Run Flask using a production WSGI server
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT:-10000} application:app"]

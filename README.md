@@ -128,17 +128,38 @@ Ensure that `requirements.txt` includes all the libraries required by your appli
 
 ### 4. Run the Application
 
-If `app.py` is your Flask entry point, execute:
+The Flask entry point is `application.py`:
 
 ```bash
-python app.py
+python application.py
 ```
 
-Open the local URL displayed in your terminal, usually:
+Open the URL displayed in your terminal. The default port is 10000; you can set
+the `PORT` environment variable to use another port.
 
-```text
-http://127.0.0.1:5000/
-```
+### Deploy on Render
+
+The repository includes `render.yaml` for a native Python web service. Push the
+project to a Git provider connected to Render, then choose **New → Blueprint**
+and select the repository. Render will install `requirements.txt` and start the
+Flask app with Gunicorn. The `artifacts/model.pkl` and
+`artifacts/preprocessor.pkl` files must remain in the repository because the
+prediction service loads them at runtime.
+
+To configure a web service manually instead, use:
+
+| Setting | Value |
+|---|---|
+| Runtime | Python 3 |
+| Build command | `pip install -r requirements.txt` |
+| Start command | `gunicorn --bind 0.0.0.0:$PORT application:app` |
+| Health check path | `/` |
+
+The project pins the Python minor version to 3.11 using `.python-version` so
+Render does not select a newer default version that may be incompatible with
+the serialized ML artifacts.
+
+Docker deployment is also supported using the included `Dockerfile`.
 
 ## How to Use
 

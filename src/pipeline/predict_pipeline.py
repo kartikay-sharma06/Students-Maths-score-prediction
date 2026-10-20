@@ -1,4 +1,5 @@
 import sys
+from pathlib import Path
 import pandas as pd
 import numpy as np
 from src.exception import CustomException
@@ -7,14 +8,18 @@ from src.utils import load_object
 
 
 class PredictPipeline:
+    PROJECT_ROOT = Path(__file__).resolve().parents[2]
+
     def __init__(self):
         pass
 
 
     def predict(self,features):
         try:
-            model_path='artifacts\model.pkl'
-            preprocessor_path='artifacts\preprocessor.pkl'
+            model_path = self.PROJECT_ROOT / 'artifacts' / 'model.pkl'
+            preprocessor_path = (
+                self.PROJECT_ROOT / 'artifacts' / 'preprocessor.pkl'
+            )
             model=load_object(file_path=model_path)
             preprocessor=load_object(file_path=preprocessor_path)
             data_scaled=preprocessor.transform(features)
